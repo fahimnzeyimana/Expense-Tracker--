@@ -36,9 +36,9 @@ pipeline {
         stage('Publish to Nexus') {
             steps {
                 sh """
-                  mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
-                  -Dnexus.user=${NEXUS_CREDENTIALS_USR} \
-                  -Dnexus.password=${NEXUS_CREDENTIALS_PSW}
+                    mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
+                    -Dnexus.user=${NEXUS_CREDENTIALS_USR} \
+                    -Dnexus.password=${NEXUS_CREDENTIALS_PSW}
                 """
             }
         }
@@ -46,9 +46,9 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 sh """
-                  curl -u ${TOMCAT_USER}:${TOMCAT_PASS} --upload-file \
-                  target/expense-tracker.war \
-                  "${TOMCAT_URL}/deploy?path=/expense-tracker&update=true"
+                    curl -u ${TOMCAT_USER}:${TOMCAT_PASS} --upload-file \
+                    target/expense-tracker.war \
+                    "${TOMCAT_URL}/deploy?path=/expense-tracker&update=true"
                 """
             }
         }
@@ -56,7 +56,9 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            node {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
         }
         success {
             echo 'Deployment successful!'
