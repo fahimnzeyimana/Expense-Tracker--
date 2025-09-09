@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQubeServer'   // Jenkins SonarQube config name
-        NEXUS_REPO = 'maven-releases'   // Nexus repo ID
+        SONARQUBE = 'SonarQubeServer'
+        NEXUS_REPO = 'maven-releases'
         NEXUS_URL = 'http://nexus:8081/repository/maven-releases/'
         NEXUS_CREDENTIALS = credentials('nexus-credentials-id')
         TOMCAT_USER = credentials('tomcat-user')
@@ -56,9 +56,7 @@ pipeline {
 
     post {
         always {
-            node {
-                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-            }
+            archiveArtifacts artifacts: 'target/*.war', fingerprint: true
         }
         success {
             echo 'Deployment successful!'
